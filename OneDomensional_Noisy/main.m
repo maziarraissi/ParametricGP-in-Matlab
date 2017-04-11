@@ -1,5 +1,6 @@
+function main()
 %% Pre-processing
-clear all; clc; close all;
+clc; close all;
 
 addpath ./Utilities
 addpath ./Kernels
