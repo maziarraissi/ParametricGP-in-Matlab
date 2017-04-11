@@ -19,7 +19,7 @@ clear h;
 clear leg;
 hold
 
-h(1) = scatter(X,y,20,'filled', 'MarkerFaceAlpha',3/8,'MarkerFaceColor',c2);
+h(1) = scatter(X,y,25,'filled', 'MarkerFaceAlpha',3/8,'MarkerFaceColor',c2);
 [l,h(4)] = boundedline(X_star, mean_star, 2.0*sqrt(var_star), ':','alpha','cmap','transparency',0.2, color2);
 outlinebounds(l,h(4));
 h(2) = plot(X_star, f_star,'LineWidth',5, 'Color', c1);
