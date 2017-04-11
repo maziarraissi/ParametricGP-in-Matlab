@@ -80,36 +80,7 @@ y = Denormalize(y, y_m, y_s);
 fprintf(1,'RMSE: %f\n', sqrt(mean((mean_star-y_star).^2)));
 fprintf(1,'RMSE of the mean of data: %f\n', sqrt(mean((mean(y)-y_star).^2)));
 
-%% Post-processing
-rmpath ./Utilities
-rmpath ./Kernels
-rmpath ./export_fig
-rmpath ./Data
-
-
-fig = figure(2);
-set(fig,'units','normalized','outerposition',[0 0 1 1])
-subplot(5,2,1)
-plot(NLML)
-subplot(5,2,2)
-plot(exp(logsigma_n))
-subplot(5,2,3)
-plot(exp(hyp(:,1)))
-subplot(5,2,4)
-plot(exp(hyp(:,2)))
-subplot(5,2,5)
-plot(exp(hyp(:,3)))
-subplot(5,2,6)
-plot(exp(hyp(:,4)))
-subplot(5,2,7)
-plot(exp(hyp(:,5)))
-subplot(5,2,8)
-plot(exp(hyp(:,6)))
-subplot(5,2,9)
-plot(exp(hyp(:,7)))
-subplot(5,2,10)
-plot(exp(hyp(:,8)))
-
+%%
 figure(3)
 bar(1./sqrt(exp(hyp(end,2:end))))
 ylabel('ARD weights')
@@ -121,3 +92,9 @@ set(gca, 'FontSize', 14);
 set(gcf, 'Color', 'w');
 
 export_fig ./Figures/Airline_ARD.png -r300
+
+%% Post-processing
+rmpath ./Utilities
+rmpath ./Kernels
+rmpath ./export_fig
+rmpath ./Data
