@@ -17,7 +17,7 @@ N = ceil(2*n/3);
 
 %% Configuration
 ModelInfo.N_batch = 1;
-ModelInfo.M = 200;
+ModelInfo.M = 10;
 
 ModelInfo.lrate_hyp  = 1e-3;
 ModelInfo.lrate_logsigma_n = 1e-3;
@@ -87,28 +87,28 @@ rmpath ./export_fig
 rmpath ./Data
 
 
-% fig = figure(2);
-% set(fig,'units','normalized','outerposition',[0 0 1 1])
-% subplot(5,2,1)
-% plot(NLML)
-% subplot(5,2,2)
-% plot(exp(logsigma_n))
-% subplot(5,2,3)
-% plot(exp(hyp(:,1)))
-% subplot(5,2,4)
-% plot(exp(hyp(:,2)))
-% subplot(5,2,5)
-% plot(exp(hyp(:,3)))
-% subplot(5,2,6)
-% plot(exp(hyp(:,4)))
-% subplot(5,2,7)
-% plot(exp(hyp(:,5)))
-% subplot(5,2,8)
-% plot(exp(hyp(:,6)))
-% subplot(5,2,9)
-% plot(exp(hyp(:,7)))
-% subplot(5,2,10)
-% plot(exp(hyp(:,8)))
+fig = figure(2);
+set(fig,'units','normalized','outerposition',[0 0 1 1])
+subplot(5,2,1)
+plot(NLML)
+subplot(5,2,2)
+plot(exp(logsigma_n))
+subplot(5,2,3)
+plot(exp(hyp(:,1)))
+subplot(5,2,4)
+plot(exp(hyp(:,2)))
+subplot(5,2,5)
+plot(exp(hyp(:,3)))
+subplot(5,2,6)
+plot(exp(hyp(:,4)))
+subplot(5,2,7)
+plot(exp(hyp(:,5)))
+subplot(5,2,8)
+plot(exp(hyp(:,6)))
+subplot(5,2,9)
+plot(exp(hyp(:,7)))
+subplot(5,2,10)
+plot(exp(hyp(:,8)))
 
 figure(3)
 bar(1./sqrt(exp(hyp(end,2:end))))
