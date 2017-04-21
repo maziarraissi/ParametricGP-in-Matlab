@@ -120,8 +120,8 @@ def likelihood_UB(hyp):
     Beta = y - MU
     NLML_1 = np.matmul(Beta.T, Beta)/(2.0*sigma_n*N)
     
-    NLML_2 = np.trace(COV)/(2.0*sigma_n*N)
-    NLML_3 = logsigma_n/2.0 + np.log(2.0*np.pi)/2.0
+    NLML_2 = np.trace(COV)/(2.0*sigma_n)
+    NLML_3 = N*logsigma_n/2.0 + N*np.log(2.0*np.pi)/2.0
     NLML = NLML_1 + NLML_2 + NLML_3
     
     return NLML[0,0]
@@ -187,7 +187,7 @@ def train():
         
         if i % monitor_likelihood == 0:
             end = time.time()
-            print("Iteration: %d, likelihood_UB: %e, elapsed time: %.2f seconds" % (i, NLML, end-start))
+            print("Iteration: %d, likelihood_UB: %.2f, elapsed time: %.2f seconds" % (i, NLML, end-start))
             start = time.time()
     
     NLML, D_NLML = UB(hyp)
