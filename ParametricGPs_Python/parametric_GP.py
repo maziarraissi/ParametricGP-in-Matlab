@@ -13,8 +13,8 @@ np.random.seed(12345)
 
 def predict(X_star):
     Z = ModelInfo["Z"]
-    m = ModelInfo["m"]
-    S = ModelInfo["S"]
+    m = ModelInfo["m"].value
+    S = ModelInfo["S"].value
     hyp = ModelInfo["hyp"]
     K_u_inv = ModelInfo["K_u_inv"]
     
@@ -74,6 +74,7 @@ def likelihood_UB(hyp):
     Z = ModelInfo["Z"]
     m = ModelInfo["m"]
     S = ModelInfo["S"]
+    jitter = ModelInfo["jitter"]
     jitter_cov = ModelInfo["jitter_cov"]
        
     N = X.shape[0]
@@ -100,6 +101,21 @@ def likelihood_UB(hyp):
     COV = kernel(X, X, hyp[:-1]) - np.matmul(psi.T, np.matmul(K_u_inv,psi)) + \
             np.matmul(Alpha.T, np.matmul(S,Alpha))
     
+    COV_inv = np.linalg.solve(COV  + np.eye(N)*sigma_n + np.eye(N)*jitter, np.eye(N))
+#    L = np.linalg.cholesky(COV  + np.eye(N)*sigma_n + np.eye(N)*jitter) 
+#    COV_inv = np.linalg.solve(np.transpose(L), np.linalg.solve(L,np.eye(N)))
+    
+    # Compute cov(Z, X)
+    cov_ZX = np.matmul(S,Alpha)
+    
+    # Update m and S
+    alpha = np.matmul(COV_inv, cov_ZX.T)
+    m = m + np.matmul(cov_ZX, np.matmul(COV_inv, y-MU))    
+    S = S - np.matmul(cov_ZX, alpha)
+    
+    ModelInfo.update({"m": m})
+    ModelInfo.update({"S": S})
+    
     # Compute NLML        
     Beta = y - MU
     NLML_1 = np.matmul(Beta.T, Beta)/(2.0*sigma_n*N)
@@ -109,45 +125,6 @@ def likelihood_UB(hyp):
     NLML = NLML_1 + NLML_2 + NLML_3
     
     return NLML[0,0]
-
-
-def update_m_S():
-    X = ModelInfo["X_batch"]
-    y = ModelInfo["y_batch"]
-    Z = ModelInfo["Z"]
-    m = ModelInfo["m"]
-    S = ModelInfo["S"]
-    hyp = ModelInfo["hyp"]
-    jitter = ModelInfo["jitter"]
-    K_u_inv = ModelInfo["K_u_inv"]
-       
-    N = X.shape[0]
-    sigma_n = np.exp(hyp[-1])
-    
-    # Compute mu(X)
-    psi = kernel(Z, X, hyp[:-1])    
-    K_u_inv_m = np.matmul(K_u_inv,m)   
-    MU = np.matmul(psi.T,K_u_inv_m)
-    
-    # Compute cov(X,X)
-    Alpha = np.matmul(K_u_inv,psi)
-    COV = kernel(X, X, hyp[:-1]) - np.matmul(psi.T, np.matmul(K_u_inv,psi)) + \
-            np.matmul(Alpha.T, np.matmul(S,Alpha))
-    
-    COV_inv = np.linalg.solve(COV  + np.eye(N)*sigma_n + np.eye(N)*jitter, np.eye(N))
-#    L = np.linalg.cholesky(COV  + np.eye(N)*sigma_n + np.eye(N)*jitter) 
-#    COV_inv = np.linalg.solve(np.transpose(L), np.linalg.solve(L,np.eye(N)))
-    
-    # Compute cov(Z, X)
-    cov_ZX = np.matmul(S,Alpha)
-    
-                 
-    # Update m and S
-    alpha = np.matmul(COV_inv, cov_ZX.T)
-    m = m + np.matmul(cov_ZX, np.matmul(COV_inv, y-MU))    
-    S = S - np.matmul(cov_ZX, alpha)
-       
-    return m, S
     
 
 def init_params():
@@ -172,6 +149,8 @@ def init_params():
     ModelInfo.update({"S": S});
 
 def train():
+    X = ModelInfo["X"]
+    y = ModelInfo["y"]
     init_params();
     
     max_iter = ModelInfo["max_iter"]
@@ -203,18 +182,15 @@ def train():
         # Update hyper-parameters
         hyp, mt_hyp, vt_hyp = stochastic_update_Adam(hyp, D_NLML, mt_hyp, vt_hyp, lrate, i)
         
-        # Update m and S
-        m, S = update_m_S()
         
-        ModelInfo.update({"hyp": hyp})
-        ModelInfo.update({"m": m})
-        ModelInfo.update({"S": S})
-        
+        ModelInfo.update({"hyp": hyp})        
         
         if i % monitor_likelihood == 0:
             end = time.time()
             print("Iteration: %d, likelihood_UB: %e, elapsed time: %.2f seconds" % (i, NLML, end-start))
             start = time.time()
+    
+    NLML, D_NLML = UB(hyp)
 
 ###############################################################################
 ###############################################################################
