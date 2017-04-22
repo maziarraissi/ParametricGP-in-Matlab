@@ -5,3 +5,12 @@ This work introduces the concept of parametric Gaussian processes (PGPs), which 
 For more details, please refer to the following: (https://arxiv.org/abs/1704.03144)
 
   - Raissi, Maziar. "Parametric Gaussian Process Regression for Big Data." arXiv preprint arXiv:1704.03144 [stat.ML] (2017).
+
+## Citation
+
+    @article{raissi2017parametric,
+      title={Parametric Gaussian Process Regression for Big Data},
+      author={Raissi, Maziar},
+      journal={arXiv preprint arXiv:1704.03144},
+      year={2017}
+    }
