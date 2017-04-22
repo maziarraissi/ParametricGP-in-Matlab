@@ -5,12 +5,3 @@ This work introduces the concept of parametric Gaussian processes (PGPs), which 
 For more details, please refer to the following: (https://arxiv.org/abs/1704.03144)
 
   - Raissi, Maziar. "Parametric Gaussian Process Regression for Big Data." arXiv preprint arXiv:1704.03144 [stat.ML] (2017).
-
-## Citation
-
-    @Misc{gpy2014,
-      author =   {{GPy}},
-      title =    {{GPy}: A Gaussian process framework in python},
-      howpublished = {\url{http://github.com/SheffieldML/GPy}},
-      year = {since 2012}
-    }
